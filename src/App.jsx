@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { ArrowRight, Heart, ShoppingCart, User } from "@phosphor-icons/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 import "@fontsource/anton/400.css";
 import "@fontsource/oswald/500.css";
 import "@fontsource/oswald/600.css";
@@ -16,6 +18,21 @@ function App() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const lenis = new Lenis({
+      anchors: true,
+      duration: 1.15,
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.05,
+      stopInertiaOnNavigate: true,
+    });
+    const updateLenis = (time) => lenis.raf(time * 1000);
+
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(updateLenis);
+    gsap.ticker.lagSmoothing(0);
+
     const context = gsap.context(() => {
       gsap.timeline({ defaults: { ease: "power3.out" } })
         .from(".site-header", { y: -28, opacity: 0, duration: 0.55 })
@@ -60,7 +77,12 @@ function App() {
         },
       });
     }, hero);
-    return () => context.revert();
+    return () => {
+      lenis.off("scroll", ScrollTrigger.update);
+      gsap.ticker.remove(updateLenis);
+      lenis.destroy();
+      context.revert();
+    };
   }, []);
 
   return (

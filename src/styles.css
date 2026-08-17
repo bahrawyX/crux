@@ -3,7 +3,6 @@
 :root { --cream:#fff2cf; --red:#db3528; --red-dark:#b9221e; --yellow:#ffdc36; --green:#376746; }
 * { box-sizing:border-box; }
 html,body,#root { width:100%; min-height:100%; }
-html { scroll-behavior:smooth; }
 body { margin:0; overflow-x:hidden; background:var(--cream); font-family:"Oswald",sans-serif; }
 a { color:inherit; text-decoration:none; }
 button,a { -webkit-tap-highlight-color:transparent; }
